@@ -28,3 +28,43 @@ function updateSlider() {
 document.querySelector('.slide-next')?.addEventListener('click', () => { slide = Math.min(slide + 1, cards.length - 1); updateSlider(); });
 document.querySelector('.slide-prev')?.addEventListener('click', () => { slide = Math.max(slide - 1, 0); updateSlider(); });
 window.addEventListener('resize', updateSlider);
+
+const orderButton = document.querySelector('#hero-order-button');
+const checkoutStatus = document.querySelector('#checkout-status');
+
+function setCheckoutState(message, isLoading = false) {
+  if (checkoutStatus) checkoutStatus.textContent = message;
+  if (!orderButton) return;
+
+  orderButton.disabled = isLoading;
+  orderButton.setAttribute('aria-busy', String(isLoading));
+  orderButton.textContent = isLoading ? 'Redirecting...' : 'Order now';
+}
+
+orderButton?.addEventListener('click', async () => {
+  setCheckoutState('Creating your secure checkout...', true);
+
+  try {
+    const response = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload.message || 'Checkout could not be created. Please try again.');
+    }
+
+    if (!payload.url || !payload.url.startsWith('https://byl.mn/')) {
+      throw new Error('The checkout link returned by Byl is invalid.');
+    }
+
+    window.location.assign(payload.url);
+  } catch (error) {
+    console.error('Byl checkout error:', error);
+    setCheckoutState(error.message || 'Checkout could not be created. Please try again.');
+  }
+});

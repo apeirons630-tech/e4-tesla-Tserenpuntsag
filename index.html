@@ -19,7 +19,7 @@
         <a href="#vehicles">Discover</a><a href="#offers">Energy</a><a href="#charging">Charging</a>
         <button class="vehicles-toggle" type="button" aria-expanded="true">Vehicles <span>⌄</span></button>
       </nav>
-      <div class="nav-actions"><a class="btn btn-soft" href="#vehicles">Shop</a><a class="btn btn-gradient" href="#offers">Test drive</a></div>
+      <div class="nav-actions"><a class="btn btn-soft" href="#vehicles">Shop</a><a class="btn btn-gradient" href="#" data-cal-link="tserenpuntsag-b-qfvgc1/tesla-model-3" data-cal-namespace="tesla-model-3" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>Test drive</a></div>
     </div>
     <div class="mega-menu is-open" id="vehicle-menu">
       <div class="mega-inner">
@@ -41,7 +41,7 @@
 
   <main>
     <section class="hero" aria-labelledby="hero-title">
-      <div class="shade"></div><div class="hero-content"><h1 id="hero-title">Model Y</h1><p>1.49% ARP available</p><div class="button-row"><a class="btn btn-gradient" href="#offers">Order now</a><a class="btn btn-glass" href="#stats">Learn more</a></div></div>
+      <div class="shade"></div><div class="hero-content"><h1 id="hero-title">Model Y</h1><p>1.49% ARP available</p><div class="button-row"><button class="btn btn-gradient checkout-button" id="hero-order-button" type="button">Order now</button><a class="btn btn-glass" href="#stats">Learn more</a></div><span class="checkout-status" id="checkout-status" role="status" aria-live="polite"></span></div>
       <div class="hero-tabs" aria-label="Vehicle image selector"><button class="active">.</button><button>.</button><button>.</button><button>Tab 4</button></div>
     </section>
 
@@ -75,5 +75,45 @@
 
   <footer class="footer"><div class="footer-inner"><div class="footer-top"><a class="footer-brand" href="#"><img src="assets/raw7.jpg" alt="Tesla"></a><a href="#">about</a><div class="socials"><a href="#">f</a><a href="#">◎</a><a href="#">𝕏</a><a href="#">in</a><a href="#">▶</a></div></div><div class="footer-bottom"><span>© 2026 Relume. All rights reserved.</span><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookies Settings</a></div></div></footer>
   <script src="script.js"></script>
+  <!-- Cal element-click embed code begins -->
+  <script>
+    (function (C, A, L) {
+      const enqueue = function (api, args) { api.q.push(args); };
+      const document = C.document;
+      C.Cal = C.Cal || function () {
+        const cal = C.Cal;
+        const args = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          document.head.appendChild(document.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (args[0] === L) {
+          const api = function () { enqueue(api, arguments); };
+          const namespace = args[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            enqueue(cal.ns[namespace], args);
+            enqueue(cal, ["initNamespace", namespace]);
+          } else {
+            enqueue(cal, args);
+          }
+          return;
+        }
+        enqueue(cal, args);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    Cal("init", "tesla-model-3", { origin: "https://app.cal.com" });
+    Cal.config = Cal.config || {};
+    Cal.config.forwardQueryParams = true;
+    Cal.ns["tesla-model-3"]("ui", {
+      hideEventTypeDetails: false,
+      layout: "month_view"
+    });
+  </script>
+  <!-- Cal element-click embed code ends -->
 </body>
 </html>
