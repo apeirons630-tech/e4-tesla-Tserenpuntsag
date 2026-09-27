@@ -35,7 +35,23 @@ module.exports = async function createCheckout(request, response) {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ items: [{ price, quantity: 1 }] }),
+        body: JSON.stringify({
+          items: [{ price, quantity: 1 }],
+          email_collection: true,
+          phone_number_collection: true,
+          custom_fields: [
+            {
+              key: 'last_name',
+              label: 'Овог',
+              type: 'text'
+            },
+            {
+              key: 'first_name',
+              label: 'Нэр',
+              type: 'text'
+            }
+          ]
+        }),
         signal: AbortSignal.timeout(10000)
       }
     );

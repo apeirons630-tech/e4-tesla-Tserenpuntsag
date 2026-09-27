@@ -14,9 +14,24 @@ Byl-ийн checkout API нь `product_id` талбар авдаггүй. Тий�
 {
   "items": [
     { "price": "model3price", "quantity": 1 }
+  ],
+  "email_collection": true,
+  "phone_number_collection": true,
+  "custom_fields": [
+    { "key": "last_name", "label": "Овог", "type": "text" },
+    { "key": "first_name", "label": "Нэр", "type": "text" }
   ]
 }
 ```
+
+Byl checkout нь захиалагчаас дараах мэдээллийг заавал авна:
+
+- Овог
+- Нэр
+- И-мэйл
+- Утасны дугаар
+
+И-мэйл нь checkout-ийн `customer_email` талбарт, овог ба нэр нь `custom_fields` массивт хадгалагдана. Утасны дугаарыг Byl-ийн үндсэн phone collection талбар авна. Эдгээр утга checkout-ийн мэдээлэл болон `checkout.completed` webhook-д ирнэ.
 
 ## API токеныг нууцлалтай тохируулах
 
