@@ -1,16 +1,121 @@
 const vehicleToggle = document.querySelector('.vehicles-toggle');
 const megaMenu = document.querySelector('.mega-menu');
-vehicleToggle?.addEventListener('click', () => {
-  const open = megaMenu.classList.toggle('is-open');
-  vehicleToggle.setAttribute('aria-expanded', String(open));
-});
-
 const mobileToggle = document.querySelector('.mobile-toggle');
 const primaryNav = document.querySelector('.primary-nav');
+
+function setVehicleMenu(open) {
+  megaMenu?.classList.toggle('is-open', open);
+  vehicleToggle?.setAttribute('aria-expanded', String(open));
+}
+
+vehicleToggle?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  const open = !megaMenu?.classList.contains('is-open');
+  setVehicleMenu(open);
+
+  if (open && window.matchMedia('(max-width: 900px)').matches) {
+    primaryNav?.classList.remove('mobile-open');
+    mobileToggle?.setAttribute('aria-expanded', 'false');
+  }
+});
+
 mobileToggle?.addEventListener('click', () => {
+  setVehicleMenu(false);
   const open = primaryNav.classList.toggle('mobile-open');
   mobileToggle.setAttribute('aria-expanded', String(open));
 });
+
+document.addEventListener('click', (event) => {
+  if (!megaMenu?.classList.contains('is-open')) return;
+  if (megaMenu.contains(event.target) || vehicleToggle?.contains(event.target)) return;
+  setVehicleMenu(false);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    setVehicleMenu(false);
+    primaryNav?.classList.remove('mobile-open');
+    mobileToggle?.setAttribute('aria-expanded', 'false');
+  }
+});
+
+const hero = document.querySelector('.hero');
+const heroTitle = document.querySelector('#hero-title');
+const heroTabs = [...document.querySelectorAll('.hero-tabs button')];
+
+function selectHeroImage(selectedTab) {
+  const image = selectedTab.dataset.image;
+  const title = selectedTab.dataset.title;
+  if (!hero || !image) return;
+
+  hero.style.backgroundImage = `url("${image}")`;
+  if (heroTitle && title) heroTitle.textContent = title;
+  heroTabs.forEach((tab) => {
+    const isActive = tab === selectedTab;
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-pressed', String(isActive));
+  });
+}
+
+heroTabs.forEach((tab) => {
+  const image = tab.dataset.image;
+  if (image) new Image().src = image;
+  tab.addEventListener('click', () => selectHeroImage(tab));
+});
+
+const milesCounter = document.querySelector('#miles-counter');
+
+if (milesCounter) {
+  const startValue = Number(milesCounter.dataset.start);
+  const increasePerSecond = Number(milesCounter.dataset.increasePerSecond);
+  const startedAt = performance.now();
+
+  function renderMilesCounter(timestamp) {
+    const elapsedSeconds = (timestamp - startedAt) / 1000;
+    const currentValue = Math.floor(startValue + (elapsedSeconds * increasePerSecond));
+    const groups = String(currentValue).replace(/\B(?=(\d{3})+(?!\d))/g, '.').split('.');
+
+    milesCounter.innerHTML = groups
+      .map((group, index) => `${group}${index < groups.length - 1 ? '.' : ''}`)
+      .join('<br>');
+    milesCounter.setAttribute('aria-label', `${currentValue.toLocaleString('en-US')} miles driven`);
+    requestAnimationFrame(renderMilesCounter);
+  }
+
+  requestAnimationFrame(renderMilesCounter);
+}
+
+const videoPlayer = document.querySelector('#fsd-video');
+
+if (videoPlayer) {
+  const video = videoPlayer.querySelector('.fsd-video');
+  const playButton = videoPlayer.querySelector('.video-play');
+
+  function playVideo() {
+    if (!video) return;
+    video.play()
+      .then(() => videoPlayer.classList.add('is-playing'))
+      .catch(() => videoPlayer.classList.remove('is-playing'));
+  }
+
+  function stopVideo() {
+    if (!video) return;
+    video.pause();
+    videoPlayer.classList.remove('is-playing');
+  }
+
+  playButton?.addEventListener('click', playVideo);
+
+  const videoObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+      playVideo();
+    } else {
+      stopVideo();
+    }
+  }, { threshold: [0, 0.45] });
+
+  videoObserver.observe(videoPlayer);
+}
 
 const slider = document.querySelector('.vehicle-slider');
 const cards = [...document.querySelectorAll('.vehicle-card')];
